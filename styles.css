@@ -40,7 +40,7 @@ button,input,select{font:inherit}
   grid-template-columns:auto auto auto;
   align-items:center;
   justify-content:space-between;
-  gap:18px;
+  gap:12px;
   min-height:68px;
 }
 
@@ -65,7 +65,7 @@ button,input,select{font:inherit}
   display:flex;
   justify-content:flex-end;
   align-items:center;
-  gap:22px;
+  gap:12px;
   font-size:.96rem;
   color:#233b60;
 }
