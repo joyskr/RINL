@@ -59,10 +59,12 @@ if (benefitsRoot && benefitTabs && benefitPanels) {
   const benefitsContent = benefitsRoot.querySelector(".benefits-content");
   const benefitTabList = [...benefitTabs];
   const benefitPanelList = [...benefitPanels];
+  const benefitsMenu = benefitsRoot.querySelector(".benefits-menu");
   let activeBenefitPanel = benefitsRoot.querySelector(".benefit-panel.active");
   let activeBenefitIndex = Math.max(0, benefitPanelList.indexOf(activeBenefitPanel));
   let benefitAnimating = false;
   let benefitTargetIndex = activeBenefitIndex;
+  let benefitsMobileLayout = null;
 
   const setBenefitsHeight = (panel = activeBenefitPanel) => {
     if (!benefitsContent || !panel) {
@@ -92,6 +94,43 @@ if (benefitsRoot && benefitTabs && benefitPanels) {
     }
   };
 
+  const isMobileBenefits = () => window.matchMedia("(max-width: 720px)").matches;
+
+  const syncMobileBenefitPanels = () => {
+    if (!isMobileBenefits()) {
+      benefitPanelList.forEach((panel) => {
+        panel.hidden = panel !== activeBenefitPanel;
+      });
+      return;
+    }
+
+    benefitPanelList.forEach((panel, index) => {
+      const active = index === benefitTargetIndex;
+      panel.hidden = false;
+      panel.classList.toggle("active", active);
+    });
+  };
+
+  const syncBenefitStructure = () => {
+    const mobile = isMobileBenefits();
+    if (benefitsMobileLayout === mobile) {
+      return;
+    }
+
+    benefitsMobileLayout = mobile;
+
+    if (mobile) {
+      benefitTabList.forEach((tab, index) => {
+        const panel = benefitPanelList[index];
+        tab.insertAdjacentElement("afterend", panel);
+      });
+    } else {
+      benefitPanelList.forEach((panel) => {
+        benefitsContent?.appendChild(panel);
+      });
+    }
+  };
+
   benefitPanelList.forEach((panel) => {
     if (panel !== activeBenefitPanel) {
       panel.hidden = true;
@@ -106,7 +145,9 @@ if (benefitsRoot && benefitTabs && benefitPanels) {
     activeBenefitPanel?.classList.remove("no-motion");
     setBenefitsHeight();
   });
+  syncBenefitStructure();
   setBenefitBackground(activeBenefitIndex);
+  syncMobileBenefitPanels();
 
   const finalizeBenefitPanelState = (nextPanel, nextIndex) => {
     if (activeBenefitPanel) {
@@ -230,6 +271,16 @@ if (benefitsRoot && benefitTabs && benefitPanels) {
   };
 
   const processBenefitQueue = () => {
+    if (isMobileBenefits()) {
+      activeBenefitIndex = benefitTargetIndex;
+      activeBenefitPanel = benefitPanelList[benefitTargetIndex];
+      setActiveBenefitTab(benefitTargetIndex);
+      setBenefitBackground(benefitTargetIndex);
+      syncMobileBenefitPanels();
+      benefitAnimating = false;
+      return;
+    }
+
     if (benefitAnimating || benefitTargetIndex === activeBenefitIndex) {
       setActiveBenefitTab(benefitTargetIndex);
       return;
@@ -250,6 +301,10 @@ if (benefitsRoot && benefitTabs && benefitPanels) {
 
   benefitTabList.forEach((tab, index) => {
     tab.addEventListener("click", () => {
+      if (isMobileBenefits() && benefitTargetIndex === index) {
+        return;
+      }
+
       benefitTargetIndex = index;
       setActiveBenefitTab(index);
       setBenefitBackground(index);
@@ -260,7 +315,11 @@ if (benefitsRoot && benefitTabs && benefitPanels) {
     });
   });
 
-  window.addEventListener("resize", () => setBenefitsHeight());
+  window.addEventListener("resize", () => {
+    syncBenefitStructure();
+    setBenefitsHeight();
+    syncMobileBenefitPanels();
+  });
 }
 
 const whyCarousel = document.querySelector("[data-why-carousel]");
