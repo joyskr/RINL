@@ -1,6 +1,7 @@
 const header = document.querySelector("[data-header]");
 const toggle = document.querySelector("[data-nav-toggle]");
 const nav = document.querySelector("[data-nav]");
+const pageKey = document.body?.dataset.page;
 
 const setHeader = () => header.classList.toggle("scrolled", window.scrollY > 12);
 
@@ -19,7 +20,14 @@ nav?.querySelectorAll("a").forEach((link) =>
   })
 );
 
-document.querySelector("[data-year]").textContent = new Date().getFullYear();
+nav?.querySelectorAll("[data-nav-link]").forEach((link) => {
+  link.classList.toggle("is-active", link.getAttribute("data-nav-link") === pageKey);
+});
+
+const yearNode = document.querySelector("[data-year]");
+if (yearNode) {
+  yearNode.textContent = new Date().getFullYear();
+}
 
 const observer = new IntersectionObserver(
   (entries) => {
@@ -509,3 +517,79 @@ quoteCard?.querySelectorAll(".dots button").forEach((dot, index) =>
     dot.classList.add("active");
   })
 );
+
+const productViewer = document.querySelector("[data-product-viewer]");
+const productTabs = productViewer ? [...productViewer.querySelectorAll("[data-product-tab]")] : [];
+const productPanels = productViewer ? [...productViewer.querySelectorAll("[data-product-panel]")] : [];
+const productSelect = productViewer?.querySelector("[data-product-select]");
+
+if (productViewer && productTabs.length && productPanels.length) {
+  let activeProductKey = productViewer.querySelector(".product-stage-panel.active")?.getAttribute("data-product-panel") || productPanels[0].getAttribute("data-product-panel");
+  let productAnimating = false;
+
+  const setActiveProductTab = (key) => {
+    productTabs.forEach((tab) => {
+      const active = tab.getAttribute("data-product-tab") === key;
+      tab.classList.toggle("active", active);
+      tab.setAttribute("aria-selected", active ? "true" : "false");
+    });
+    if (productSelect) {
+      productSelect.value = key;
+    }
+  };
+
+  const showProductPanel = (key) => {
+    if (productAnimating || key === activeProductKey) {
+      return;
+    }
+
+    const currentPanel = productPanels.find((panel) => panel.getAttribute("data-product-panel") === activeProductKey);
+    const nextPanel = productPanels.find((panel) => panel.getAttribute("data-product-panel") === key);
+
+    if (!nextPanel) {
+      return;
+    }
+
+    productAnimating = true;
+    setActiveProductTab(key);
+
+    if (!currentPanel) {
+      nextPanel.hidden = false;
+      nextPanel.classList.add("active");
+      activeProductKey = key;
+      productAnimating = false;
+      return;
+    }
+
+    currentPanel.classList.remove("active");
+
+    window.setTimeout(() => {
+      currentPanel.hidden = true;
+      nextPanel.hidden = false;
+      const nextScroll = nextPanel.querySelector(".product-stage-scroll");
+      if (nextScroll) {
+        nextScroll.scrollTop = 0;
+      }
+
+      requestAnimationFrame(() => {
+        nextPanel.classList.add("active");
+        activeProductKey = key;
+        window.setTimeout(() => {
+          productAnimating = false;
+        }, 380);
+      });
+    }, 220);
+  };
+
+  setActiveProductTab(activeProductKey);
+
+  productTabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      showProductPanel(tab.getAttribute("data-product-tab"));
+    });
+  });
+
+  productSelect?.addEventListener("change", () => {
+    showProductPanel(productSelect.value);
+  });
+}
