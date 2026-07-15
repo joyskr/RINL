@@ -667,3 +667,26 @@ if (productHeroSlider && productHeroSlides.length) {
     scheduleHeroSlide();
   });
 }
+
+const serviceCycle = document.querySelector("[data-service-cycle]");
+const serviceTabs = serviceCycle ? [...serviceCycle.querySelectorAll("[data-service-tab]")] : [];
+const serviceImages = serviceCycle ? [...serviceCycle.querySelectorAll("[data-service-image]")] : [];
+
+if (serviceCycle && serviceTabs.length && serviceImages.length) {
+  const setActiveService = (key) => {
+    serviceTabs.forEach((tab) => {
+      const active = tab.dataset.serviceTab === key;
+      tab.classList.toggle("active", active);
+      tab.setAttribute("aria-pressed", active ? "true" : "false");
+    });
+    serviceImages.forEach((image) => {
+      image.classList.toggle("active", image.dataset.serviceImage === key);
+    });
+  };
+
+  serviceTabs.forEach((tab) => {
+    tab.addEventListener("click", () => setActiveService(tab.dataset.serviceTab));
+  });
+
+  setActiveService(serviceTabs.find((tab) => tab.classList.contains("active"))?.dataset.serviceTab || serviceTabs[0].dataset.serviceTab);
+}
