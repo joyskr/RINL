@@ -121,7 +121,7 @@ button,input,select{font:inherit}
 }
 
 .hero{
-  background:url("Banner%20Image.webp") center center / cover no-repeat;
+  background:url("assets/images/hero/banner-image.webp") center center / cover no-repeat;
   background-color:#fff;
   min-height:calc(100vh - var(--header-height));
 }
@@ -1335,7 +1335,7 @@ button,input,select{font:inherit}
   position:relative;
   overflow:hidden;
   color:var(--white);
-  background:url("Banner%20Image.webp") center center / cover no-repeat;
+  background:url("assets/images/hero/banner-image.webp") center center / cover no-repeat;
   background-color:#fff;
   min-height:calc(100vh - var(--header-height));
 }
@@ -1351,7 +1351,7 @@ button,input,select{font:inherit}
 }
 
 .page-hero-products{
-  background:url("Product Banner.webp") center center / cover no-repeat;
+  background:url("assets/images/products/product-hero-lower-left.png") center center / cover no-repeat;
   background-color:#fff;
 }
 
@@ -1478,11 +1478,22 @@ button,input,select{font:inherit}
 }
 
 .page-hero-products .page-hero-shell{
-  align-items:center;
+  align-items:flex-start;
+  padding:clamp(10px,2.4vh,28px) 0 52px;
 }
 
 .page-hero-products .page-hero-copy-slider{
-  margin:auto 0;
+  margin:0;
+}
+
+.page-hero-products .product-hero-slide{
+  align-items:flex-start;
+  justify-content:flex-start;
+  padding:0 36px 36px;
+}
+
+.page-hero-products .product-hero-slide-copy{
+  margin:0;
 }
 
 .product-hero-slide.active .product-hero-slide-copy,
@@ -1513,12 +1524,13 @@ button,input,select{font:inherit}
 
 .product-collage{
   position:relative;
-  width:min(50vw,640px);
-  height:min(50vw,640px);
-  min-width:460px;
-  min-height:460px;
+  width:min(48vw,680px);
+  height:min(52vw,620px);
+  min-width:500px;
+  min-height:520px;
   justify-self:end;
   isolation:isolate;
+  overflow:visible;
 }
 
 .product-collage-item{
@@ -1530,7 +1542,8 @@ button,input,select{font:inherit}
   overflow:hidden;
   opacity:.58;
   filter:saturate(.82) brightness(.84);
-  transform:rotate(var(--tilt)) scale(.96);
+  border-radius:18px;
+  transform:translateZ(0) scale(.96);
   transition:transform 1.05s cubic-bezier(.2,.8,.2,1), opacity 1.05s ease, filter 1.05s ease, border-color 1.05s ease, box-shadow 1.05s ease;
   z-index:1;
 }
@@ -1547,77 +1560,63 @@ button,input,select{font:inherit}
   box-shadow:0 26px 58px rgba(0,0,0,.34), 0 0 0 7px rgba(47,191,91,.34);
   opacity:1;
   filter:saturate(1.1) brightness(1.06);
-  transform:rotate(var(--tilt)) scale(1.12);
+  transform:translateZ(0) scale(1.1);
   z-index:7;
 }
 
 .product-collage-tmt{
-  --tilt:-9deg;
   left:3%;
-  top:0;
-  width:33%;
+  top:4%;
+  width:29%;
   height:28%;
-  border-radius:34% 20% 28% 24%;
   z-index:2;
 }
 
 .product-collage-angles{
-  --tilt:8deg;
-  right:5%;
-  top:2%;
-  width:34%;
-  height:30%;
-  border-radius:24% 38% 28% 30%;
+  left:3%;
+  top:36%;
+  width:29%;
+  height:28%;
   z-index:3;
 }
 
 .product-collage-channels{
-  --tilt:-5deg;
-  left:33%;
-  top:25%;
-  width:34%;
-  height:27%;
-  border-radius:30% 22% 34% 24%;
-  z-index:1;
+  left:3%;
+  bottom:4%;
+  width:29%;
+  height:28%;
+  z-index:2;
 }
 
 .product-collage-beams{
-  --tilt:9deg;
-  right:0;
-  top:39%;
-  width:35%;
-  height:29%;
-  border-radius:24% 32% 22% 38%;
+  left:35.5%;
+  top:36%;
+  width:29%;
+  height:28%;
   z-index:4;
 }
 
 .product-collage-squares{
-  --tilt:-11deg;
-  left:0;
-  top:39%;
-  width:34%;
-  height:27%;
-  border-radius:22% 34% 28% 30%;
+  right:3%;
+  top:4%;
+  width:29%;
+  height:28%;
   z-index:3;
 }
 
 .product-collage-flats{
-  --tilt:6deg;
-  left:14%;
-  bottom:0;
-  width:34%;
-  height:27%;
-  border-radius:36% 22% 30% 24%;
+  right:3%;
+  top:36%;
+  width:29%;
+  height:28%;
   z-index:5;
 }
 
 .product-collage-rounds{
-  --tilt:-4deg;
-  right:12%;
-  bottom:2%;
-  width:35%;
-  height:27%;
-  border-radius:26% 30% 36% 20%;
+  right:3%;
+  bottom:4%;
+  width:29%;
+  height:28%;
   z-index:6;
 }
 
@@ -3082,10 +3081,10 @@ button,input,select{font:inherit}
     display:none;
   }
   .hero{
-    background:url("Banner%20Image.webp") center center / cover no-repeat;
+    background:url("assets/images/hero/banner-image.webp") center center / cover no-repeat;
   }
   .page-hero-products{
-    background:url("Product Banner.webp") center center / cover no-repeat;
+    background:url("assets/images/products/product-hero-lower-left.png") center center / cover no-repeat;
   }
   .hero-copy{
     padding:0 0 46px;
@@ -3109,6 +3108,9 @@ button,input,select{font:inherit}
   .page-hero-shell,
   .hero-composition{
     padding:0 0 44px;
+  }
+  .page-hero-products .page-hero-shell{
+    padding:8px 0 44px;
   }
   .product-hero-layout{
     gap:0;
